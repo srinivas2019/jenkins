@@ -1,0 +1,35 @@
+pipeline {
+    agent any 
+    stages{
+        stage("welcome") {
+            steps {
+                echo "welcome to jenkins pipeline"
+            }
+        }
+        stage("clone-code"){
+            steps {
+                echo "welome to github code"
+            }
+        }
+        stage("build-code"){
+            steps {
+                echo "welome to maven build tool"
+            }
+        }
+        stage("deploy-artifact"){
+            steps {
+                echo "welome totomcat app"
+            }
+        }
+         stage("deploy on s3 artifact"){
+            steps {
+                echo "welome to aws s3 bucket"
+            }
+        }
+        stage("delivery into nexus repositries"){
+            steps {
+                echo "welome to nexus repo"
+            }
+        }
+    }
+}
