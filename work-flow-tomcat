@@ -1,0 +1,27 @@
+pipeline {
+    agent any 
+    stages {
+        stage("welcome") {
+            steps{
+                echo "welcome to jenkins pipeline"
+            }
+        }
+         stage("clone-code") {
+            steps{
+                git 'https://github.com/srinivas2019/javacode.git'
+            }
+        }
+         stage("build-code") {
+            steps{
+                sh "mvn clean package"
+            }
+        }
+        stage("deploy-tomcat") {
+            steps{
+                sshagent(['tom']){
+                    sh "scp  -o StrictHostKeyChecking=no  webapp/target/webapp.war     ec2-user@10.0.0.152:/opt/tomcat/webapps"
+                }
+            }
+        }
+    }
+}
