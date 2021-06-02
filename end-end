@@ -1,0 +1,41 @@
+pipeline {
+    agent any 
+    stages {
+        stage("welcome") {
+            steps{
+                echo "welcome to jenkins pipeline"
+            }
+        }
+         stage("clone-code") {
+            steps{
+                git 'https://github.com/srinivas2019/javacode.git'
+            }
+        }
+         stage("build-code") {
+            steps{
+                sh "mvn clean package"
+            }
+        }
+        stage("deploy-tomcat") {
+            steps{
+                sshagent(['tom']){
+                    sh "scp  -o StrictHostKeyChecking=no  webapp/target/webapp.war     ec2-user@10.0.0.152:/opt/tomcat/webapps"
+                }
+            }
+        }
+        stage("delivery-aws") {
+            steps{
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]){
+                    sh "aws s3 ls"
+                    sh "aws s3 mb s3://june-21"
+                    sh "aws s3 cp webapp/target/webapp.war    s3://june-21"
+                }
+            }
+        }
+         stage("deploy-nexus") {
+            steps{
+                nexusArtifactUploader artifacts: [[artifactId: 'tata-car', classifier: '', file: 'webapp/target/webapp.war', type: 'war']], credentialsId: 'nexus', groupId: 'tata', nexusUrl: '3.138.100.38:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'nexa', version: '1.0-SNAPSHOT'
+            }
+        }
+    }
+}
