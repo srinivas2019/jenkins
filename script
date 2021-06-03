@@ -1,0 +1,11 @@
+node {
+    stage ('welcome') {
+        echo "welcome to welcome "
+    }
+    stage ('git') {
+        git 'https://github.com/srinivas2019/ansible.git'
+    }
+     stage ('ansible') {
+       ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: 'dev.inv', playbook: 'apache.yml'
+    }
+}
