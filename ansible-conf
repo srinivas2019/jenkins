@@ -1,0 +1,20 @@
+pipeline {
+    agent any 
+    stages {
+        stage("welcome") {
+            steps {
+                echo "welome to sample test"
+            }
+        }
+        stage("git-clone") {
+            steps {
+                git 'https://github.com/srinivas2019/ansible.git'
+            }
+        }
+         stage("ansible") {
+            steps {
+                ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: 'dev.inv', playbook: 'apache.yml'
+            }
+        }
+    }
+}
