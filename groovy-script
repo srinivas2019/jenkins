@@ -1,0 +1,11 @@
+node {
+    stage("welcome"){
+        echo "welcome"
+    }
+    stage("git-clone"){
+        git 'https://github.com/srinivas2019/javacode.git'
+    }
+     stage("build-code"){
+        sh "mvn clean package"
+    }
+}
